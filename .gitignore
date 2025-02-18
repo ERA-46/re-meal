@@ -1,0 +1,10 @@
+# Node.js
+remeal-frontend/node_modules
+remeal-frontend/.env
+
+# Java (Spring Boot)
+remeal-backend/target
+remeal-backend/.idea
+remeal-backend/.mvn
+remeal-backend/.vscode
+remeal-backend/.env

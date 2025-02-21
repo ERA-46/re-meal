@@ -1,6 +1,12 @@
 package com.remeal.remeal_backend.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -14,6 +20,7 @@ public class User {
     private String email;
     private String address;
     private String phone;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
@@ -64,5 +71,13 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

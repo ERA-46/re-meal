@@ -32,7 +32,57 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+
+:root {
+  --primary-color: #6A5ACD;
+  --primary-hover: #5A4ACD;
+  --text-light: white;
+}
+
+.navbar {
+  background-color: var(--primary-color) !important;
+}
+
+.navbar .nav-link {
+  color: var(--text-light) !important;
+}
+
+.navbar .nav-link:hover {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--text-light) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+}
+
+
+.footer {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  text-align: center;
+  padding: 10px;
+}
+
+
+.form-container {
+  margin-bottom: 100px;
+}
+
+
+
+.homepage-container {
+  margin-bottom: 150px;
 }

@@ -19,8 +19,8 @@ const LoginPage = () => {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem("token", data.token);
-            navigate("/");
+            localStorage.setItem("data", JSON.stringify(data)); 
+            navigate("/dashBoard");
         } else {
             alert("Login failed!");
         }

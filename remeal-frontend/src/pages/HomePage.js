@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
-    const isAuthenticated = localStorage.getItem("token");
+    const isAuthenticated = localStorage.getItem("data");
 
     return (
         <div className="container text-center homepage-container">

@@ -68,4 +68,8 @@ public class FoodListingService {
         }
         foodListingRepository.deleteById(id);
     }
+
+    public List<FoodListing> getAllFoodListings() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

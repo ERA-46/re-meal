@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const navigate = useNavigate();
-    const isAuthenticated = localStorage.getItem("token");
+    const isAuthenticated = localStorage.getItem("data");
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("data");
         navigate("/login");
     };
 
@@ -20,6 +20,9 @@ const Navbar = () => {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/">Home</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/dashBoard">DashBoard</Link>
                                 </li>
                                 <li className="nav-item">
                                     <button className="btn btn-light" onClick={handleLogout}>Logout</button>

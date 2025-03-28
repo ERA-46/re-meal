@@ -11,6 +11,7 @@ const FoodSupplierDashboard = () => {
     quantity: 1,
     expireTime: "",
   });
+  const [editingId, setEditingId] = useState(null); 
 
   useEffect(() => {
     fetchFoodListings();
@@ -25,7 +26,7 @@ const FoodSupplierDashboard = () => {
       const response = await fetch(`${API_BASE_URL}/`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) throw new Error("Failed to fetch food listings");
@@ -41,10 +42,10 @@ const FoodSupplierDashboard = () => {
     setNewFood({ ...newFood, [e.target.name]: e.target.value });
   };
 
-  const handleAddFood = async (e) => {
+  const handleAddOrUpdateFood = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
-    
     const storedUser = localStorage.getItem("user");
     const userData = storedUser ? JSON.parse(storedUser) : null;
     const userId = userData?.id;
@@ -56,38 +57,72 @@ const FoodSupplierDashboard = () => {
     }
 
     const payload = {
-      storeName: newFood.storeName,
-      storeAddress: newFood.storeAddress,
-      foodType: newFood.foodType,
+      ...newFood,
       quantity: parseInt(newFood.quantity, 10),
       expireTime: new Date(newFood.expireTime).toISOString(),
       supplier: { id: userId },
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/list-food`, {
-        method: "POST",
+      const url = editingId
+        ? `${API_BASE_URL}/update-listing/${editingId}`
+        : `${API_BASE_URL}/list-food`;
+
+      const method = editingId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Failed to add food");
+      if (!response.ok) throw new Error("Failed to save food listing");
+      setNewFood({
+        storeName: "",
+        storeAddress: "",
+        foodType: "",
+        quantity: 1,
+        expireTime: "",
+      });
+      setEditingId(null);
       fetchFoodListings();
     } catch (error) {
-      console.error("Error: Failed to add food", error);
+      console.error("Error:", error);
     }
+  };
+
+  const handleEdit = (food) => {
+    setNewFood({
+      storeName: food.storeName,
+      storeAddress: food.storeAddress,
+      foodType: food.foodType,
+      quantity: food.quantity,
+      expireTime: food.expireTime.slice(0, 16), 
+    });
+    setEditingId(food.id);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setNewFood({
+      storeName: "",
+      storeAddress: "",
+      foodType: "",
+      quantity: 1,
+      expireTime: "",
+    });
   };
 
   const handleDeleteFood = async (id) => {
     try {
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/delete-listing/${id}`, {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) throw new Error("Failed to delete food");
@@ -97,14 +132,13 @@ const FoodSupplierDashboard = () => {
     }
   };
 
-
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Food Supplier Dashboard</h2>
 
       <div className="card shadow-sm p-4 mb-4">
-        <h4 className="mb-3">Add New Food</h4>
-        <form onSubmit={handleAddFood}>
+        <h4 className="mb-3">{editingId ? "Edit Food" : "Add New Food"}</h4>
+        <form onSubmit={handleAddOrUpdateFood}>
           <div className="mb-3">
             <input type="text" name="storeName" className="form-control" placeholder="Store Name" value={newFood.storeName} onChange={handleChange} required />
           </div>
@@ -120,9 +154,16 @@ const FoodSupplierDashboard = () => {
           <div className="mb-3">
             <input type="datetime-local" name="expireTime" className="form-control" value={newFood.expireTime} onChange={handleChange} required />
           </div>
-          <button type="submit" className="btn btn-primary w-100">
-            Post Food
-          </button>
+          <div className="d-flex justify-content-between">
+            <button type="submit" className="btn btn-primary w-100 me-2">
+              {editingId ? "Update Food" : "Post Food"}
+            </button>
+            {editingId && (
+              <button type="button" className="btn btn-secondary w-100 ms-2" onClick={handleCancelEdit}>
+                Cancel
+              </button>
+            )}
+          </div>
         </form>
       </div>
 
@@ -134,10 +175,11 @@ const FoodSupplierDashboard = () => {
           <ul className="list-group">
             {foodListings.map((food) => (
               <li key={food.id} className="list-group-item d-flex justify-content-between align-items-center">
-                {food.foodType} - {food.quantity} pcs
-                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteFood(food.id)}>
-                  Delete
-                </button>
+                <div>{food.foodType} - {food.quantity} pcs</div>
+                <div>
+                  <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(food)}>Edit</button>
+                  <button className="btn btn-sm btn-danger" onClick={() => handleDeleteFood(food.id)}>Delete</button>
+                </div>
               </li>
             ))}
           </ul>

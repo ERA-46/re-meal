@@ -33,8 +33,8 @@ public class AdminController {
 
     // View all food listings
     @GetMapping("/food-listings")
-    public List<FoodListing> getAllFoodListings() {
-        return foodListingService.getAllFoodListings();
+    public List<FoodListing> getAllFoodListing() {
+        return foodListingService.getAllFoodListing();
     }
 
     // Delete a food listing by ID

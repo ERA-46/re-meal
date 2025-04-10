@@ -28,6 +28,26 @@ const MyRequestsPage = () => {
         }
     }, [requesterId]);
 
+    const handleCancel = async (id) => {
+        const confirm = window.confirm("Are you sure you want to cancel this request?");
+        if (!confirm) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/api/food-requests/${id}`, {
+                method: "DELETE",
+            });
+
+            if (res.ok) {
+                setRequests(requests.filter((r) => r.id !== id));
+            } else {
+                alert("Failed to cancel request.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred while cancelling.");
+        }
+    };
+
     return (
         <div className="container mt-4">
             <h2 className="text-center mb-4">My Food Requests</h2>
@@ -43,6 +63,7 @@ const MyRequestsPage = () => {
                                 <th>Quantity</th>
                                 <th>Status</th>
                                 <th>Timestamp</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,6 +73,16 @@ const MyRequestsPage = () => {
                                     <td>{req.quantity}</td>
                                     <td>{req.status}</td>
                                     <td>{new Date(req.timestamp).toLocaleString()}</td>
+                                    <td>
+                                        {req.status === "PENDING" && (
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleCancel(req.id)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

@@ -25,6 +25,9 @@ const Navbar = () => {
                                     <Link className="nav-link" to="/dashBoard">DashBoard</Link>
                                 </li>
                                 <li className="nav-item">
+                                    <Link className="nav-link" to="/deliveries">Deliveries</Link>
+                                </li>
+                                <li className="nav-item">
                                     <button className="btn btn-light" onClick={handleLogout}>Logout</button>
                                 </li>
                             </>

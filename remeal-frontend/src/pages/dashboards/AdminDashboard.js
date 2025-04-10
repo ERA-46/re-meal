@@ -1,147 +1,152 @@
 import React, { useEffect, useState } from "react";
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
-  const [foodListings, setFoodListings] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [foodListings, setFoodListings] = useState([]);
+    const [error, setError] = useState("");
 
-  const token = localStorage.getItem("token");
+    useEffect(() => {
+        fetchUsers();
+        fetchFoodListings();
+    }, []);
 
-  useEffect(() => {
-    fetchUsers();
-    fetchFoodListings();
-  }, []);
+    const fetchUsers = async () => {
+        try {
+            const res = await fetch("http://localhost:8080/api/admin/users");
+            const data = await res.json();
+            setUsers(data);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to load users.");
+        }
+    };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/admin/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      console.error("Failed to fetch users:", error);
-    }
-  };
+    const fetchFoodListings = async () => {
+        try {
+            const res = await fetch("http://localhost:8080/api/admin/food-listings");
+            const data = await res.json();
+            setFoodListings(data);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to load food listings.");
+        }
+    };
 
-  const fetchFoodListings = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/admin/food-listings", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setFoodListings(data);
-    } catch (error) {
-      console.error("Failed to fetch food listings:", error);
-    }
-  };
+    const deleteUser = async (userId) => {
+        const confirm = window.confirm("Are you sure you want to delete this user?");
+        if (!confirm) return;
 
-  const deleteUser = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-    try {
-      await fetch(`http://localhost:8080/api/admin/users/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUsers(users.filter((user) => user.id !== id));
-    } catch (error) {
-      console.error("Failed to delete user:", error);
-    }
-  };
+        try {
+            const res = await fetch(`http://localhost:8080/api/admin/users/${userId}`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                setUsers(users.filter(user => user.id !== userId));
+            } else {
+                alert("Failed to delete user.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred while deleting the user.");
+        }
+    };
 
-  const deleteFoodListing = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this food listing?")) return;
-    try {
-      await fetch(`http://localhost:8080/api/admin/food-listings/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setFoodListings(foodListings.filter((food) => food.id !== id));
-    } catch (error) {
-      console.error("Failed to delete food listing:", error);
-    }
-  };
+    const deleteFoodListing = async (listingId) => {
+        const confirm = window.confirm("Are you sure you want to delete this listing?");
+        if (!confirm) return;
 
-  return (
-    <div className="container mt-4">
-      <h2 className="mb-4 text-center">Admin Dashboard</h2>
+        try {
+            const res = await fetch(`http://localhost:8080/api/admin/food-listings/${listingId}`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                setFoodListings(foodListings.filter(listing => listing.id !== listingId));
+            } else {
+                alert("Failed to delete listing.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred while deleting the listing.");
+        }
+    };
 
-      {/* Users Section */}
-      <div className="card p-3 mb-4">
-        <h4 className="mb-3">Registered Users</h4>
-        {users.length === 0 ? (
-          <p>No users found.</p>
-        ) : (
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Name</th>
-                <th>User Type</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.email}</td>
-                  <td>{user.name}</td>
-                  <td>{user.userType}</td>
-                  <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => deleteUser(user.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+    return (
+        <div className="container mt-4">
+            <h2 className="text-center mb-4">Admin Dashboard</h2>
 
-      {/* Food Listings Section */}
-      <div className="card p-3">
-        <h4 className="mb-3">Food Listings</h4>
-        {foodListings.length === 0 ? (
-          <p>No food listings found.</p>
-        ) : (
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Store Name</th>
-                <th>Food Type</th>
-                <th>Quantity</th>
-                <th>Expire Time</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {foodListings.map((food) => (
-                <tr key={food.id}>
-                  <td>{food.storeName}</td>
-                  <td>{food.foodType}</td>
-                  <td>{food.quantity}</td>
-                  <td>{new Date(food.expireTime).toLocaleString()}</td>
-                  <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => deleteFoodListing(food.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
-  );
+            {error && <p className="text-danger text-center">{error}</p>}
+
+            <h4 className="mt-5">Registered Users</h4>
+            <div className="table-responsive">
+                <table className="table table-bordered">
+                    <thead className="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id}>
+                                <td>{user.id}</td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                                <td>{user.userType}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => deleteUser(user.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 className="mt-5">Food Listings</h4>
+            <div className="table-responsive">
+                <table className="table table-bordered">
+                    <thead className="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Food Type</th>
+                            <th>Quantity</th>
+                            <th>Location</th>
+                            <th>Prepared</th>
+                            <th>Expires</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {foodListings.map((item) => (
+                            <tr key={item.id}>
+                                <td>{item.id}</td>
+                                <td>{item.foodType}</td>
+                                <td>{item.quantity}</td>
+                                <td>{item.location}</td>
+                                <td>{new Date(item.preparedTime).toLocaleString()}</td>
+                                <td>{new Date(item.expirationTime).toLocaleString()}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => deleteFoodListing(item.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 };
 
 export default AdminDashboard;

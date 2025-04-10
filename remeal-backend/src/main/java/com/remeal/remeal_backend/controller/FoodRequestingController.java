@@ -41,6 +41,11 @@ public class FoodRequestingController {
         List<FoodRequest> list = foodRequestService.getAllFoodRequests();
         return ResponseEntity.ok(list);
     }
+    @GetMapping("/requester/{id}")
+    public List<FoodRequest> getRequestsByRequesterId(@PathVariable Long id) {
+    return foodRequestService.getRequestsByRequesterId(id);
+    }
+
 
     @PostMapping("/request-food")
     public ResponseEntity<FoodRequest> createFoodRequest(@RequestBody FoodRequest request){

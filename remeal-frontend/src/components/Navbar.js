@@ -31,6 +31,11 @@ const Navbar = () => {
                                 <li className="nav-item">
                                     <button className="btn btn-light" onClick={handleLogout}>Logout</button>
                                 </li>
+                                {user?.userType === "FOOD_REQUESTER" && (
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/request-food">Request Food</Link>
+                                </li>
+                                )}
                             </>
                         ) : (
                             <>

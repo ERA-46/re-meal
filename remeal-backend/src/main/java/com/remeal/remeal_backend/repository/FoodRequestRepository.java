@@ -19,4 +19,7 @@ public interface FoodRequestRepository extends JpaRepository<FoodRequest, Long> 
     @Query("SELECT COUNT(fr) FROM FoodRequest fr WHERE fr.requester.id = :userId AND FUNCTION('week', fr.timestamp) = :week AND FUNCTION('year', fr.timestamp) = :year")
     long countByRequesterIdAndWeek(@Param("userId") Long userId, @Param("week") int week, @Param("year") int year);
 
+    List<FoodRequest> findByRequesterId(Long requesterId);
+
+
 }

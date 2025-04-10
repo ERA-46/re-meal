@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from './pages/Dashboard';
+import RequestFoodPage from "./pages/RequestFoodPage";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/deliveries" element={<DeliveryPage />} />
+          <Route path="/request-food" element={<RequestFoodPage />} />
+          
         </Routes>
       </div>
       <Footer />

@@ -86,5 +86,9 @@ public class FoodRequestService {
     }
 
 
+    public List<FoodRequest> getRequestsByRequesterId(Long requesterId) {
+    return foodRequestRepository.findByRequesterId(requesterId);
+    }
+
 
 }

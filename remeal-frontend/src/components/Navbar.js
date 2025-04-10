@@ -36,6 +36,12 @@ const Navbar = () => {
                                     <Link className="nav-link" to="/request-food">Request Food</Link>
                                 </li>
                                 )}
+                                {user?.userType === "FOOD_REQUESTER" && (
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/my-requests">My Requests</Link>
+                                </li>
+                                )}
+
                             </>
                         ) : (
                             <>

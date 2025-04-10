@@ -78,4 +78,9 @@ public class FoodRequest {
     public void setRequester(User requester) {
         this.requester = requester;
     }
+
+    public void setTimestamp(LocalDateTime now) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTimestamp'");
+    }
 }

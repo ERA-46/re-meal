@@ -9,6 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from './pages/Dashboard';
 import RequestFoodPage from "./pages/RequestFoodPage";
+import MyRequestsPage from "./pages/MyRequestsPage";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/deliveries" element={<DeliveryPage />} />
           <Route path="/request-food" element={<RequestFoodPage />} />
+          <Route path="/my-requests" element={<MyRequestsPage />} />
+
           
         </Routes>
       </div>

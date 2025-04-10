@@ -19,7 +19,9 @@ const LoginPage = () => {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem("data", JSON.stringify(data)); 
+            const { token, user } = data;
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
             navigate("/dashBoard");
         } else {
             alert("Login failed!");

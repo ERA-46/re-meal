@@ -8,18 +8,17 @@ const Dashboard = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const storedData = localStorage.getItem("data");
-        console.log("storedData", storedData); 
-        if (storedData) {
+        const storedUser = localStorage.getItem("user"); 
+        if (storedUser) {
             try {
-                const parsedData = JSON.parse(storedData);
-                setUser(parsedData);
+                const parsedUser = JSON.parse(storedUser);
+                setUser(parsedUser);
             } catch (error) {
-                console.error("Error parsing localStorage data:", error);
+                console.error("Error parsing user data:", error);
             }
         }
     }, []);
-
+    
 
     if (!user) return <p>No Data...</p>;
 

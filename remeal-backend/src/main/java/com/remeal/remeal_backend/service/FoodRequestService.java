@@ -1,6 +1,10 @@
 package com.remeal.remeal_backend.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +27,34 @@ public class FoodRequestService {
         return foodRequestRepository.findAll();
     }
 
-    public FoodRequest createFoodRequest(FoodRequest foodRequest, Long reqsterId){
+    public FoodRequest createFoodRequest(FoodRequest foodRequest, Long reqsterId) {
         Optional<User> requester = userRepository.findById(reqsterId);
-        if(!requester.isPresent()){
+        if (!requester.isPresent()) {
             throw new RuntimeException("Requester not found");
         }
+    
+        Long userId = requester.get().getId();
+        LocalDate today = LocalDate.now();
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int currentWeek = today.get(weekFields.weekOfWeekBasedYear());
+        int currentYear = today.getYear();
+    
+        long todayCount = foodRequestRepository.countByRequesterIdAndDate(userId, today);
+        long weekCount = foodRequestRepository.countByRequesterIdAndWeek(userId, currentWeek, currentYear);
+    
+        if (todayCount >= 2) {
+            throw new RuntimeException("Daily request limit (2) reached.");
+        }
+    
+        if (weekCount >= 5) {
+            throw new RuntimeException("Weekly request limit (5) reached.");
+        }
+    
         foodRequest.setRequester(requester.get());
+        foodRequest.setTimestamp(LocalDateTime.now()); // Set time of request
         return foodRequestRepository.save(foodRequest);
     }
+    
 
     public FoodRequest updateFoodRequest(Long id, FoodRequest updateFoodRequest){
     

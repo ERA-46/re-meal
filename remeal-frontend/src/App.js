@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import Dashboard from './pages/Dashboard';
 import RequestFoodPage from "./pages/dashboards/RequestFoodPage";
 import MyRequestsPage from "./pages/dashboards/MyRequestsPage";
+import DeliveryPage from "./pages/dashboards/DeliveryPage";
 
 function App() {
   return (

@@ -8,8 +8,8 @@ import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from './pages/Dashboard';
-import RequestFoodPage from "./pages/RequestFoodPage";
-import MyRequestsPage from "./pages/MyRequestsPage";
+import RequestFoodPage from "./pages/dashboards/RequestFoodPage";
+import MyRequestsPage from "./pages/dashboards/MyRequestsPage";
 
 function App() {
   return (

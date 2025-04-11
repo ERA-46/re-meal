@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = () => {
     const navigate = useNavigate();
     const isAuthenticated = localStorage.getItem("token"); 
+    const user = JSON.parse(localStorage.getItem("data"));
 
     const handleLogout = () => {
         localStorage.removeItem("token"); 

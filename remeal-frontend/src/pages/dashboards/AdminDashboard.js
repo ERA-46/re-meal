@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SupplierStatsCard from "../components/SupplierStatsCard";
+
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -73,6 +75,9 @@ const AdminDashboard = () => {
     return (
         <div className="container mt-4">
             <h2 className="text-center mb-4">Admin Dashboard</h2>
+            
+            <SupplierStatsCard />
+            
 
             {error && <p className="text-danger text-center">{error}</p>}
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SupplierStatsCard from "../components/SupplierStatsCard";
+import SupplierStatsCard from "../../components/SupplierStatsCard";
 
 
 const AdminDashboard = () => {
@@ -14,7 +14,12 @@ const AdminDashboard = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/admin/users");
+            const token = localStorage.getItem("token");
+            const res = await fetch("http://localhost:8080/api/admin/users", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = await res.json();
             setUsers(data);
         } catch (err) {
@@ -22,10 +27,16 @@ const AdminDashboard = () => {
             setError("Failed to load users.");
         }
     };
+    
 
     const fetchFoodListings = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/admin/food-listings");
+            const token = localStorage.getItem("token");
+            const res = await fetch("http://localhost:8080/api/admin/food-listings", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = await res.json();
             setFoodListings(data);
         } catch (err) {
@@ -33,6 +44,7 @@ const AdminDashboard = () => {
             setError("Failed to load food listings.");
         }
     };
+    
 
     const deleteUser = async (userId) => {
         const confirm = window.confirm("Are you sure you want to delete this user?");

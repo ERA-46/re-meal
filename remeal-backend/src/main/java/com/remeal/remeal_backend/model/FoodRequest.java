@@ -22,7 +22,7 @@ public class FoodRequest {
 
     private String requestedFoodType;
     private int quantity;
-    private LocalDateTime requestTime;
+    private LocalDateTime timestamp;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
@@ -55,12 +55,12 @@ public class FoodRequest {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getRequestTime() {
-        return requestTime;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setRequestTime(LocalDateTime requestTime) {
-        this.requestTime = requestTime;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public RequestStatus getStatus() {
@@ -77,10 +77,5 @@ public class FoodRequest {
 
     public void setRequester(User requester) {
         this.requester = requester;
-    }
-
-    public void setTimestamp(LocalDateTime now) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTimestamp'");
     }
 }

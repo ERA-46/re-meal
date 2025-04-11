@@ -34,4 +34,10 @@ public class DeliveryController {
     public List<Delivery> getMyDeliveries(@PathVariable Long deliveryPersonId) {
         return deliveryService.getDeliveriesByDeliveryPersonId(deliveryPersonId);
     }
+
+    @PostMapping("/complete/{deliveryId}")
+    public Delivery completeDelivery(@PathVariable Long deliveryId) {
+        return deliveryService.completeDelivery(deliveryId);
+    }
+
 }

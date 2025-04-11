@@ -46,4 +46,17 @@ public class DeliveryService {
             throw new RuntimeException("User not found.");
         }
     }
+
+    public Delivery completeDelivery(Long deliveryId) {
+        Optional<Delivery> optionalDelivery = deliveryRepository.findById(deliveryId);
+
+        if (!optionalDelivery.isPresent()) {
+            throw new RuntimeException("Delivery not found.");
+        }
+
+        Delivery delivery = optionalDelivery.get();
+        delivery.setStatus(RequestStatus.COMPLETED);
+        return deliveryRepository.save(delivery);
+    }
+
 }

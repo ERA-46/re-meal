@@ -2,6 +2,7 @@ package com.remeal.remeal_backend.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.remeal.remeal_backend.model.User;
 import com.remeal.remeal_backend.repository.UserRepository;
 import com.remeal.remeal_backend.util.JwtUtil;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -18,23 +18,24 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User registerUser(User user) {
+    @Autowired
+    private JwtUtil jwtUtil;
 
+    public User registerUser(User user) {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("Email already exists");
         }
-        user.setPassword(user.getPassword());
-
+        user.setPassword(user.getPassword()); // You might want to hash this in production
         return userRepository.save(user);
     }
 
-    @Autowired
-    private JwtUtil jwtUtil;
     public Map<String, Object> loginUser(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
+
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-            String token = jwtUtil.generateToken(email);
+            String token = jwtUtil.generateToken(email, user.get().getUserType().toString());
+
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("user", user.get());
@@ -51,6 +52,4 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-
-
 }

@@ -32,40 +32,45 @@ public class FoodListingController {
     @Autowired
     private UserRepository userRepository;
 
-
+    
 
     @GetMapping("/")
-    public ResponseEntity<List<FoodListing>> getAllFoodListing(){
-        List<FoodListing> list = foodListingService.getAllFoodListing();
+    public ResponseEntity<List<FoodListing>> getFoodListingsByCurrentSupplier() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<FoodListing> list = foodListingService.getFoodListingsBySupplier(currentUser);
         return ResponseEntity.ok(list);
     }
 
     @PostMapping("/list-food")
-    public ResponseEntity<FoodListing> createFoodListing(@RequestBody FoodListing foodListing){    
+    public ResponseEntity<FoodListing> createFoodListing(@RequestBody FoodListing foodListing) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
 
-        User currentUser =  userRepository.findByEmail(name)
-        .orElseThrow(() -> new RuntimeException("User not Logged in"));
+        User currentUser = userRepository.findByEmail(name)
+                .orElseThrow(() -> new RuntimeException("User not Logged in"));
 
         Long supplierId = currentUser.getId();
-        
+
         FoodListing newFoodListing = foodListingService.createFoodListing(foodListing, supplierId);
         return ResponseEntity.ok(newFoodListing);
     }
 
     @PutMapping("/update-listing/{id}")
-    public ResponseEntity<FoodListing> updateFoodListing(@PathVariable Long id, @RequestBody FoodListing updatedFoodListing){
-        FoodListing foodListing = foodListingService.updateFoodListing(id, updatedFoodListing);        
+    public ResponseEntity<FoodListing> updateFoodListing(@PathVariable Long id,
+            @RequestBody FoodListing updatedFoodListing) {
+        FoodListing foodListing = foodListingService.updateFoodListing(id, updatedFoodListing);
         return ResponseEntity.ok(foodListing);
     }
 
     @DeleteMapping("/delete-listing/{id}")
-    public ResponseEntity<Void> deleteFoodListing(@PathVariable Long id){
+    public ResponseEntity<Void> deleteFoodListing(@PathVariable Long id) {
         foodListingService.deleteFoodListing(id);
         return ResponseEntity.noContent().build();
     }
 
-
-    
 }

@@ -55,4 +55,9 @@ public class FoodListingService {
                 .orElseThrow(() -> new RuntimeException("Food Listing not found"));
         foodListingRepository.deleteById(id);
     }
+
+    public List<FoodListing> getFoodListingsBySupplier(User supplier) {
+        return foodListingRepository.findBySupplier(supplier);
+    }
+    
 }

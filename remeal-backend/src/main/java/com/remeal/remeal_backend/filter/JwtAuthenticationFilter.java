@@ -1,10 +1,9 @@
 package com.remeal.remeal_backend.filter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,9 +24,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-                                    throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain)
+            throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
@@ -35,18 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = authHeader.substring(7);
             try {
                 String email = jwtUtil.extractEmail(jwt);
-                String role = jwtUtil.extractRole(jwt); 
-
-                List<SimpleGrantedAuthority> authorities = List.of(
-                        new SimpleGrantedAuthority("ROLE_" + role) 
-                );
-
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, null,
+                        Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } catch (Exception e) {
-                // Optional: log the error or return custom unauthorized
-                System.out.println("JWT validation failed: " + e.getMessage());
+                System.out.println("Invalid JWT: " + e.getMessage());
             }
         }
 

@@ -44,21 +44,19 @@ public class AdminController {
     public List<FoodListing> getAllFoodListing() {
         return foodListingService.getAllFoodListing();
     }
-    
 
     // Delete a food listing by ID
     @DeleteMapping("/food-listings/{id}")
     public void deleteFoodListing(@PathVariable Long id) {
         foodListingService.deleteFoodListing(id);
     }
-    
-    
+
     @Autowired
     private FoodListingRepository foodListingRepository;
+
     @GetMapping("/supplier/stats")
     public ResponseEntity<List<Map<String, Object>>> getSupplierStats() {
-    List<Map<String, Object>> stats = foodListingRepository.getSupplierStats();
-    return ResponseEntity.ok(stats);
+        List<Map<String, Object>> stats = foodListingRepository.getSupplierStats();
+        return ResponseEntity.ok(stats);
     }
-
 }

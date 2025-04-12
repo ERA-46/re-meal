@@ -32,8 +32,6 @@ public class FoodListingController {
     @Autowired
     private UserRepository userRepository;
 
-
-
     @GetMapping("/")
     public ResponseEntity<List<FoodListing>> getAllFoodListing(){
         List<FoodListing> list = foodListingService.getAllFoodListing();
@@ -45,8 +43,8 @@ public class FoodListingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
 
-        User currentUser =  userRepository.findByEmail(name)
-        .orElseThrow(() -> new RuntimeException("User not Logged in"));
+        User currentUser = userRepository.findByEmail(name)
+            .orElseThrow(() -> new RuntimeException("User not Logged in"));
 
         Long supplierId = currentUser.getId();
         
@@ -65,7 +63,4 @@ public class FoodListingController {
         foodListingService.deleteFoodListing(id);
         return ResponseEntity.noContent().build();
     }
-
-
-    
 }

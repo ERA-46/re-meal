@@ -34,13 +34,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/login", "/api/users/register").permitAll()
-
-                // 👇 Role-based access
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/delivery/**").hasRole("DELIVERY_PERSON")
-                .requestMatchers("/api/food-listings/**").hasAnyRole("FOOD_SUPPLIER", "DELIVERY_PERSON", "FOOD_REQUESTER")
-                .anyRequest().authenticated()
-            )
+                .requestMatchers("/api/admin/**").authenticated()
+                .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -68,6 +63,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-    
 }
